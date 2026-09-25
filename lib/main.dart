@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -55,6 +57,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final storage = FlutterSecureStorage();
+
+  String hashPin(String pin) {
+    var bytes = utf8.encode(pin);
+    var digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  Future<void> setPin(String pin) async {
+    String hashedPin = hashPin(pin);
+    await storage.write(key: 'user_pin', value: hashedPin);
+  }
+
+  Future<bool> verifyPin(String enteredPin) async {
+    String? savedHash = await storage.read(key: 'user_pin');
+    String enteredHash = hashPin(enteredPin);
+    return savedHash == enteredHash;
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -113,7 +133,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () async {
+          await setPin("1234");
+          bool result = await verifyPin("1234");
+          print("PIN Verified: $result");
+          _incrementCounter();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
