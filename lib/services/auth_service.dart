@@ -25,7 +25,6 @@ Future<bool> verifyPin(String enteredPin) async {
   return savedHash == enteredHash;
 }
 
-// Naya function: PIN change karna (purana PIN verify karke naya set karna)
 Future<bool> changePin(String oldPin, String newPin) async {
   bool isOldCorrect = await verifyPin(oldPin);
   if (isOldCorrect) {
@@ -46,4 +45,17 @@ Future<bool> authenticateWithBiometrics() async {
       return false;
     }
 
-    bool
+    bool authenticated = await auth.authenticate(
+      localizedReason: 'Unlock your vault',
+      options: const AuthenticationOptions(
+        biometricOnly: true,
+        stickyAuth: true,
+      ),
+    );
+
+    return authenticated;
+  } catch (e) {
+    print('Biometric error: $e');
+    return false;
+  }
+}
