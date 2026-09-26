@@ -1,22 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/auth_service.dart';
 
-final storage = FlutterSecureStorage();
-
-String hashPinCheck(String pin) {
-  var bytes = utf8.encode(pin);
-  var digest = sha256.convert(bytes);
-  return digest.toString();
-}
-
-Future<bool> verifyPin(String enteredPin) async {
-  String? savedHash = await storage.read(key: 'user_pin');
-  String enteredHash = hashPinCheck(enteredPin);
-  return savedHash == enteredHash;
-}
 
 class PinLockScreen extends StatefulWidget {
   const PinLockScreen({super.key});

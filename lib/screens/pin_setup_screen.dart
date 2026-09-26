@@ -1,21 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../services/auth_service.dart';
 import 'pin_lock_screen.dart';
-
-final storage = FlutterSecureStorage();
-
-String hashPin(String pin) {
-  var bytes = utf8.encode(pin);
-  var digest = sha256.convert(bytes);
-  return digest.toString();
-}
-
-Future<void> setPin(String pin) async {
-  String hashedPin = hashPin(pin);
-  await storage.write(key: 'user_pin', value: hashedPin);
-}
 
 class PinSetupScreen extends StatefulWidget {
   const PinSetupScreen({super.key});
