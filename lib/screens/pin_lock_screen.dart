@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../services/auth_service.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -34,6 +35,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
       message = isCorrect ? 'Unlocked! ✅' : 'Wrong PIN ❌';
     });
   }
+  void useBiometric() async {
+    bool success = await authenticateWithBiometrics();
+    setState(() {
+      message = success ? 'Unlocked with biometric! ✅' : 'Biometric failed ❌';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +65,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
             ),
             const SizedBox(height: 10),
             Text(message),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: useBiometric,
+              icon: const Icon(Icons.fingerprint),
+              label: const Text('Use Biometric'),
+            ),
           ],
         ),
       ),
