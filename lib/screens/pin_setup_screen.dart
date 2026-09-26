@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'pin_lock_screen.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -33,6 +34,13 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
       setState(() {
         message = 'PIN set successfully!';
       });
+
+      // 1 second wait karo, phir Lock Screen pe navigate karo
+      await Future.delayed(const Duration(seconds: 1));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const PinLockScreen()),
+      );
     } else {
       setState(() {
         message = 'PIN must be 4 digits';
