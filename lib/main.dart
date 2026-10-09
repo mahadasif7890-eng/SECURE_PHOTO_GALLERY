@@ -19,7 +19,7 @@ class SecurePhotoGalleryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Secure Photo Gallery App',
+      title: 'Secure Photo Gallery',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
       theme: ThemeData(
