@@ -21,7 +21,7 @@ class SecurePhotoGalleryApp extends StatelessWidget {
       title: 'Secure Photo Gallery',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
-      theme: ThemeData app(
+      theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
