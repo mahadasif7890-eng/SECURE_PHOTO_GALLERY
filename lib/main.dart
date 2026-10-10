@@ -15,14 +15,13 @@ void main() {
 
 class SecurePhotoGalleryApp extends StatelessWidget {
   const SecurePhotoGalleryApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Secure Photo Gallery',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
-      theme: ThemeData(
+      theme: ThemeData app(
         useMaterial3: true,
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xFFFFFFFF),
