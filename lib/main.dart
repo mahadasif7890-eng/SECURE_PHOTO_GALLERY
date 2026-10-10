@@ -28,7 +28,7 @@ class SecurePhotoGalleryApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1F1F1F),
           brightness: Brightness.light,
-          surface: const Color(0xFFFFFFFF),
+          surface: const Color(0xFF1F1F1F),
           primary: const Color(0xFF1F1F1F),
         ),
         appBarTheme: const AppBarTheme(
