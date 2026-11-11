@@ -7,6 +7,7 @@ class SampleData {
     MediaItem(
       id: 'm1',
       title: 'Friendship Moment',
+      description: 'Warm afternoon portrait captured in the campus courtyard with friends after lectures.',
       url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 26, 14, 30),
       location: 'Campus Courtyard',
@@ -17,6 +18,7 @@ class SampleData {
     MediaItem(
       id: 'm2',
       title: 'Architectural Monument at Night',
+      description: 'Illuminated marble dome reflecting softly against the evening sky at the national monument.',
       url: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 26, 21, 15),
       location: 'National Monument',
@@ -27,6 +29,7 @@ class SampleData {
     MediaItem(
       id: 'm3',
       title: 'Embroidered Crimson Fabric',
+      description: 'Close-up of traditional crimson woven textile featuring intricate gold thread embroidery.',
       url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 26, 11, 20),
       location: 'Artisanal Studio',
@@ -37,6 +40,7 @@ class SampleData {
     MediaItem(
       id: 'm4',
       title: 'Floral Indigo Textile',
+      description: 'Handcrafted deep indigo fabric showcase from the weekend design workshop.',
       url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 26, 10, 45),
       location: 'Design Workshop',
@@ -47,6 +51,7 @@ class SampleData {
     MediaItem(
       id: 'm5',
       title: 'Golden Ochre Traditional Dress',
+      description: 'Vibrant ochre garments displayed under warm gallery lights in the boutique collection.',
       url: 'https://images.unsplash.com/photo-1607344645866-009c320b5ab8?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 26, 10, 10),
       location: 'Boutique Collection',
@@ -57,6 +62,7 @@ class SampleData {
     MediaItem(
       id: 'm6',
       title: 'Study Notes & Mathematical Derivation',
+      description: 'Open notebooks and reference textbooks arranged on a quiet desk during exam prep.',
       url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 25, 17, 30),
       location: 'Library Desk',
@@ -67,6 +73,7 @@ class SampleData {
     MediaItem(
       id: 'm7',
       title: 'Casual Refreshment Selfie',
+      description: 'Relaxed portrait taken during a quick coffee break at the corner cafe.',
       url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 25, 16, 05),
       location: 'Cafe Corner',
@@ -77,6 +84,7 @@ class SampleData {
     MediaItem(
       id: 'm8',
       title: 'Lecture Slide: System Architecture',
+      description: 'Captured overview of distributed systems architecture diagrams from the afternoon seminar.',
       url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 25, 14, 15),
       location: 'Lecture Hall 3B',
@@ -87,6 +95,7 @@ class SampleData {
     MediaItem(
       id: 'm9',
       title: 'Dorm Room Quick Clip',
+      description: 'Short group collaboration clip recorded while brainstorming project prototypes.',
       url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '0:24',
@@ -99,6 +108,7 @@ class SampleData {
     MediaItem(
       id: 'm10',
       title: 'Achievement Certificate',
+      description: 'Official recognition award photographed right after the annual honors ceremony.',
       url: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 24, 16, 40),
       location: 'Auditorium',
@@ -109,6 +119,7 @@ class SampleData {
     MediaItem(
       id: 'm11',
       title: 'Linear Algebra Matrix Calculation',
+      description: 'Chalkboard formulas and eigenvalues worked through during the morning math lab.',
       url: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 24, 11, 00),
       location: 'Math Lab',
@@ -119,6 +130,7 @@ class SampleData {
     MediaItem(
       id: 'm12',
       title: 'Evening Bike Ride Vlog',
+      description: 'Golden-hour scenic ride footage along the Ring Road Expressway.',
       url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '01:32',
@@ -131,6 +143,7 @@ class SampleData {
     MediaItem(
       id: 'm13',
       title: 'Handwritten Exam Revision',
+      description: 'Organized summary sheets and highlighted flashcards prepared for final review.',
       url: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 23, 14, 20),
       location: 'Study Table',
@@ -141,6 +154,7 @@ class SampleData {
     MediaItem(
       id: 'm14',
       title: 'Late Night Discussion Video',
+      description: 'Team meetup recording covering sprint milestones and UI polish.',
       url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '02:52',
@@ -153,6 +167,7 @@ class SampleData {
     MediaItem(
       id: 'm15',
       title: 'Project Group Walkthrough',
+      description: 'Screen and whiteboard walkthrough of the mobile gallery prototype.',
       url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '04:33',
@@ -165,6 +180,7 @@ class SampleData {
     MediaItem(
       id: 'm16',
       title: 'Quick Reaction Snippet',
+      description: 'Candid short reaction clip filmed in the student lounge.',
       url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '0:06',
@@ -177,6 +193,7 @@ class SampleData {
     MediaItem(
       id: 'm17',
       title: 'Sunset Time Lapse',
+      description: 'Amber waves and coastal horizon time lapse recorded from the rooftop terrace.',
       url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
       type: MediaType.video,
       duration: '0:19',
@@ -189,6 +206,7 @@ class SampleData {
     MediaItem(
       id: 'm18',
       title: 'Happy Birthday Celebration Cake',
+      description: 'Rich chocolate layer cake topped with berries for the weekend birthday celebration.',
       url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 20, 20, 00),
       location: 'Dining Hall',
@@ -199,6 +217,7 @@ class SampleData {
     MediaItem(
       id: 'm19',
       title: 'Laptop Coding Session',
+      description: 'Clean minimal desk setup captured while building Flutter UI components.',
       url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 20, 14, 10),
       location: 'Workspace',
@@ -209,12 +228,79 @@ class SampleData {
     MediaItem(
       id: 'm20',
       title: 'City Skyline at Twilight',
+      description: 'Panoramic dusk view of glowing skyscrapers from the downtown overlook.',
       url: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=800&q=80',
       dateTime: DateTime(2026, 9, 19, 19, 45),
       location: 'Downtown Overlook',
       size: '5.1 MB',
       resolution: '24 MP • 6000 × 4000',
       placeholderColor: const Color(0xFF3F51B5),
+    ),
+    MediaItem(
+      id: 'm21',
+      title: 'Sunlit Forest Canopy',
+      description: 'Morning sunbeams filtering through tall pine and maple trees along the woodland trail.',
+      url: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 18, 9, 15),
+      location: 'Pine Ridge Trail',
+      size: '4.4 MB',
+      resolution: '12 MP • 4032 × 3024',
+      placeholderColor: const Color(0xFF2E7D32),
+    ),
+    MediaItem(
+      id: 'm22',
+      title: 'Alpine Valley Panorama',
+      description: 'Crisp reflection of granite cliffs and evergreens across calm mountain river waters.',
+      url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 17, 17, 20),
+      location: 'Valley Viewpoint',
+      size: '5.8 MB',
+      resolution: '24 MP • 6000 × 4000',
+      placeholderColor: const Color(0xFF1565C0),
+    ),
+    MediaItem(
+      id: 'm23',
+      title: 'Embedded Hardware Prototype',
+      description: 'Macro shot of custom microcontroller circuitry photographed in the electronics lab.',
+      url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 16, 15, 05),
+      location: 'Hardware Lab',
+      size: '3.5 MB',
+      resolution: '12 MP • 4032 × 3024',
+      placeholderColor: const Color(0xFF1B5E20),
+    ),
+    MediaItem(
+      id: 'm24',
+      title: 'Travel Route Atlas',
+      description: 'Top-down view of the topographic map used to plan our autumn weekend excursion.',
+      url: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 15, 13, 40),
+      location: 'Travel Planning Desk',
+      size: '2.9 MB',
+      resolution: '12 MP • 4032 × 3024',
+      placeholderColor: const Color(0xFF5D4037),
+    ),
+    MediaItem(
+      id: 'm25',
+      title: 'Security Hardware Key',
+      description: 'Symbolic close-up of digital vault encryption hardware protecting private albums.',
+      url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 14, 11, 10),
+      location: 'Security Studio',
+      size: '3.2 MB',
+      resolution: '12 MP • 4032 × 3024',
+      placeholderColor: const Color(0xFF37474F),
+    ),
+    MediaItem(
+      id: 'm26',
+      title: 'Botanical Garden Walk',
+      description: 'Fresh green foliage and outdoor pavilion captured during a weekend nature walk.',
+      url: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=800&q=80',
+      dateTime: DateTime(2026, 9, 13, 10, 25),
+      location: 'City Botanical Park',
+      size: '4.0 MB',
+      resolution: '12 MP • 4032 × 3024',
+      placeholderColor: const Color(0xFF388E3C),
     ),
   ];
 

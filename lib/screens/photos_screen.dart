@@ -56,75 +56,101 @@ class _PhotosScreenState extends State<PhotosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+
     return Scaffold(
       appBar: _isSelectionMode ? _buildSelectionAppBar() : null,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // Stories / Memories Carousel at the top
-          if (!_isSelectionMode) ...[
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4, bottom: 8),
-                child: StoriesCarousel(stories: widget.stories),
-              ),
-            ),
-          ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          const double maxContentWidth = 840.0;
+          final double horizontalInset =
+              width > maxContentWidth ? (width - maxContentWidth) / 2 : 0.0;
+          final double gridSpacing = width >= 600 ? 6.0 : 4.0;
 
-          // Media Grid
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _columnCount,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 2,
-                childAspectRatio: 1.0,
+          return Scrollbar(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = widget.mediaItems[index];
-                  final isSelected = _selectedIds.contains(item.id);
+              slivers: [
+                // Stories / Memories Carousel at the top
+                if (!_isSelectionMode)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        horizontalInset,
+                        4,
+                        horizontalInset,
+                        8,
+                      ),
+                      child: StoriesCarousel(stories: widget.stories),
+                    ),
+                  ),
 
-                  return MediaGridItem(
-                    item: item,
-                    isSelected: isSelected,
-                    isSelectionMode: _isSelectionMode,
-                    onTap: () {
-                      if (_isSelectionMode) {
-                        _toggleSelection(item.id);
-                      } else {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) =>
-                                PhotoDetailsScreen(
-                              mediaList: widget.mediaItems,
-                              initialIndex: index,
-                              onLockItem: widget.onLockItem,
-                              onDeleteItem: widget.onDeleteItem,
-                            ),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return FadeTransition(opacity: animation, child: child);
-                            },
-                          ),
+                // Media Grid (3 photographs per row with consistent spacing)
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalInset + gridSpacing,
+                    vertical: gridSpacing,
+                  ),
+                  sliver: SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _columnCount,
+                      crossAxisSpacing: gridSpacing,
+                      mainAxisSpacing: gridSpacing,
+                      childAspectRatio: 1.0,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final item = widget.mediaItems[index];
+                        final isSelected = _selectedIds.contains(item.id);
+
+                        return MediaGridItem(
+                          item: item,
+                          isSelected: isSelected,
+                          isSelectionMode: _isSelectionMode,
+                          heroTagPrefix: 'photos',
+                          onTap: () {
+                            if (_isSelectionMode) {
+                              _toggleSelection(item.id);
+                            } else {
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondaryAnimation) =>
+                                      PhotoDetailsScreen(
+                                    mediaList: widget.mediaItems,
+                                    initialIndex: index,
+                                    heroTagPrefix: 'photos',
+                                    onLockItem: widget.onLockItem,
+                                    onDeleteItem: widget.onDeleteItem,
+                                  ),
+                                  transitionsBuilder:
+                                      (context, animation, secondaryAnimation, child) {
+                                    return FadeTransition(opacity: animation, child: child);
+                                  },
+                                ),
+                              );
+                            }
+                          },
+                          onLongPress: () {
+                            _toggleSelection(item.id);
+                          },
                         );
-                      }
-                    },
-                    onLongPress: () {
-                      _toggleSelection(item.id);
-                    },
-                  );
-                },
-                childCount: widget.mediaItems.length,
-              ),
-            ),
-          ),
+                      },
+                      childCount: widget.mediaItems.length,
+                    ),
+                  ),
+                ),
 
-          // Extra bottom padding so floating bottom pill doesn't obscure content
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
-        ],
+                // Extra bottom padding so floating bottom pill doesn't obscure content
+                SliverToBoxAdapter(
+                  child: SizedBox(height: bottomInset + 96),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

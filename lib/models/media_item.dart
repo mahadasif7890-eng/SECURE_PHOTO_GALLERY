@@ -5,6 +5,7 @@ enum MediaType { photo, video }
 class MediaItem {
   final String id;
   final String title;
+  final String description;
   final String url;
   final MediaType type;
   final String? duration;
@@ -19,6 +20,7 @@ class MediaItem {
   const MediaItem({
     required this.id,
     required this.title,
+    this.description = '',
     required this.url,
     this.type = MediaType.photo,
     this.duration,
@@ -36,6 +38,7 @@ class MediaItem {
   MediaItem copyWith({
     String? id,
     String? title,
+    String? description,
     String? url,
     MediaType? type,
     String? duration,
@@ -50,6 +53,7 @@ class MediaItem {
     return MediaItem(
       id: id ?? this.id,
       title: title ?? this.title,
+      description: description ?? this.description,
       url: url ?? this.url,
       type: type ?? this.type,
       duration: duration ?? this.duration,

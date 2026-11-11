@@ -82,134 +82,160 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
     return Scaffold(
       backgroundColor: bgColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(flex: 3),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompactHeight = constraints.maxHeight < 480;
+            final double logoSize = isCompactHeight ? 58 : 84;
+            final double logoPadding = isCompactHeight ? 16 : 24;
 
-            // Animated Logo with subtle soft shadow (No blue tint)
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: AnimatedBuilder(
-                animation: _pulseAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _pulseAnimation.value,
-                    child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: cardBg,
-                        border: Border.all(color: borderColor, width: 1.2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.06),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Spacer(flex: 3),
+
+                          // Animated Logo with subtle soft shadow (No blue tint)
+                          ScaleTransition(
+                            scale: _scaleAnimation,
+                            child: AnimatedBuilder(
+                              animation: _pulseAnimation,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: _pulseAnimation.value,
+                                  child: Container(
+                                    padding: EdgeInsets.all(logoPadding),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: cardBg,
+                                      border: Border.all(color: borderColor, width: 1.2),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black
+                                              .withValues(alpha: isDark ? 0.35 : 0.06),
+                                          blurRadius: 24,
+                                          offset: const Offset(0, 8),
+                                        ),
+                                      ],
+                                    ),
+                                    child: GooglePhotosLogo(size: logoSize),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: isCompactHeight ? 18 : 32),
+
+                          // Title & Subtitle
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Secure Photos',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: isCompactHeight ? 24 : 30,
+                                    fontWeight: FontWeight.w800,
+                                    color: primaryTextColor,
+                                    letterSpacing: -0.6,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+
+                                // Elegant Neutral / Google Photos pinwheel accent bar
+                                Container(
+                                  width: 44,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFEA4335),
+                                        Color(0xFFFBBC05),
+                                        Color(0xFF34A853),
+                                        Color(0xFF4285F4),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: isCompactHeight ? 10 : 14),
+                                Text(
+                                  'Private & Encrypted Gallery Vault',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.w500,
+                                    color: secondaryTextColor,
+                                    letterSpacing: 0.1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Spacer(flex: 3),
+
+                          // Bottom Minimalist Security Badge
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: isCompactHeight ? 16 : 36),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                                decoration: BoxDecoration(
+                                  color: cardBg,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(color: borderColor, width: 1.2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.lock_outline_rounded,
+                                      size: 15,
+                                      color: isDark ? Colors.white70 : const Color(0xFF333333),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        'AES-256 Local Hardware Encryption',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: isDark ? Colors.white70 : const Color(0xFF444444),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      child: const GooglePhotosLogo(size: 84),
                     ),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 32),
-
-            // Title & Subtitle
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                children: [
-                  Text(
-                    'Secure Photos',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      color: primaryTextColor,
-                      letterSpacing: -0.6,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Elegant Neutral / Google Photos pinwheel accent bar
-                  Container(
-                    width: 44,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFFEA4335),
-                          Color(0xFFFBBC05),
-                          Color(0xFF34A853),
-                          Color(0xFF4285F4),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 14),
-                  Text(
-                    'Private & Encrypted Gallery Vault',
-                    style: TextStyle(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w500,
-                      color: secondaryTextColor,
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(flex: 3),
-
-            // Bottom Minimalist Security Badge (Monochrome / Theme-Matched, No Blue)
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 36),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-                  decoration: BoxDecoration(
-                    color: cardBg,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: borderColor, width: 1.2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.lock_outline_rounded,
-                        size: 15,
-                        color: isDark ? Colors.white70 : const Color(0xFF333333),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'AES-256 Local Hardware Encryption',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isDark ? Colors.white70 : const Color(0xFF444444),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

@@ -15,89 +15,103 @@ class FloatingBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isNarrow = screenWidth < 360;
 
     // Theme-matched colors (Google Photos Material 3 style)
     final barBgColor = isDark ? const Color(0xFF252729) : Colors.white;
     final barBorderColor = isDark ? const Color(0xFF383A3D) : const Color(0xFFE8EAED);
-    final shadowColor = isDark ? Colors.black.withValues(alpha: 0.4) : Colors.black.withValues(alpha: 0.10);
+    final shadowColor =
+        isDark ? Colors.black.withValues(alpha: 0.4) : Colors.black.withValues(alpha: 0.10);
 
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Main Floating Pill
-            Expanded(
-              child: Container(
-                height: 56,
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
-                decoration: BoxDecoration(
-                  color: barBgColor,
-                  borderRadius: BorderRadius.circular(32),
-                  border: Border.all(color: barBorderColor, width: 1.2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: shadowColor,
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildPillTab(
-                      context: context,
-                      index: 0,
-                      icon: Icons.photo_size_select_actual_rounded,
-                      label: 'Photos',
-                    ),
-                    _buildPillTab(
-                      context: context,
-                      index: 1,
-                      icon: Icons.photo_library_outlined,
-                      label: 'Collections',
-                    ),
-                    _buildPillTab(
-                      context: context,
-                      index: 2,
-                      icon: Icons.lock_outline_rounded,
-                      label: 'Locked',
-                    ),
-                  ],
-                ),
-              ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isNarrow ? 10 : 14,
+              vertical: 8,
             ),
-
-            const SizedBox(width: 8),
-
-            // Google Lens / Visual Search Floating Button
-            GestureDetector(
-              onTap: onSearchLensTap,
-              child: Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: barBgColor,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: barBorderColor, width: 1.2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: shadowColor,
-                      blurRadius: 14,
-                      offset: const Offset(0, 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Main Floating Pill
+                Expanded(
+                  child: Container(
+                    height: isNarrow ? 52 : 56,
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: barBgColor,
+                      borderRadius: BorderRadius.circular(32),
+                      border: Border.all(color: barBorderColor, width: 1.2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: shadowColor,
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildPillTab(
+                          context: context,
+                          index: 0,
+                          icon: Icons.photo_size_select_actual_rounded,
+                          label: 'Photos',
+                          isNarrow: isNarrow,
+                        ),
+                        _buildPillTab(
+                          context: context,
+                          index: 1,
+                          icon: Icons.photo_library_outlined,
+                          label: 'Collections',
+                          isNarrow: isNarrow,
+                        ),
+                        _buildPillTab(
+                          context: context,
+                          index: 2,
+                          icon: Icons.lock_outline_rounded,
+                          label: 'Locked',
+                          isNarrow: isNarrow,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: isDark ? const Color(0xFF8AB4F8) : const Color(0xFF1A73E8),
-                  size: 24,
+
+                SizedBox(width: isNarrow ? 6 : 8),
+
+                // Google Lens / Visual Search Floating Button
+                GestureDetector(
+                  onTap: onSearchLensTap,
+                  child: Container(
+                    width: isNarrow ? 50 : 54,
+                    height: isNarrow ? 50 : 54,
+                    decoration: BoxDecoration(
+                      color: barBgColor,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: barBorderColor, width: 1.2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: shadowColor,
+                          blurRadius: 14,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.search_rounded,
+                      color: isDark ? const Color(0xFF8AB4F8) : const Color(0xFF1A73E8),
+                      size: isNarrow ? 22 : 24,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -108,6 +122,7 @@ class FloatingBottomBar extends StatelessWidget {
     required int index,
     required IconData icon,
     required String label,
+    required bool isNarrow,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = currentIndex == index;
@@ -124,7 +139,7 @@ class FloatingBottomBar extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           margin: const EdgeInsets.symmetric(horizontal: 2),
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: isNarrow ? 2 : 4),
           decoration: BoxDecoration(
             color: isSelected ? activeBgColor : Colors.transparent,
             borderRadius: BorderRadius.circular(24),
@@ -135,10 +150,10 @@ class FloatingBottomBar extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 20,
+                size: isNarrow ? 18 : 20,
                 color: isSelected ? activeFgColor : inactiveFgColor,
               ),
-              const SizedBox(width: 5),
+              SizedBox(width: isNarrow ? 3 : 5),
               Flexible(
                 child: Text(
                   label,
@@ -147,7 +162,7 @@ class FloatingBottomBar extends StatelessWidget {
                   style: TextStyle(
                     color: isSelected ? activeFgColor : inactiveFgColor,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    fontSize: 13,
+                    fontSize: isNarrow ? 11.5 : 13,
                     letterSpacing: -0.2,
                   ),
                 ),

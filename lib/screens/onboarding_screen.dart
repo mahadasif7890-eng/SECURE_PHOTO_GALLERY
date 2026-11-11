@@ -15,21 +15,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingItem> _items = [
     const OnboardingItem(
       title: 'Smart & Elegant Gallery',
-      subtitle: 'Relive your favorite memories, photos, and videos with intelligent tagging and clean timeline view.',
+      subtitle:
+          'Relive your favorite memories, photos, and videos with intelligent tagging and clean timeline view.',
       icon: Icons.photo_library_rounded,
       color: Color(0xFF1E2024),
       iconColor: Color(0xFFEA4335),
     ),
     const OnboardingItem(
       title: 'Biometric Locked Vault',
-      subtitle: 'Keep your private and sensitive photos strictly secured behind a passcode or fingerprint authentication.',
+      subtitle:
+          'Keep your private and sensitive photos strictly secured behind a passcode or fingerprint authentication.',
       icon: Icons.shield_rounded,
       color: Color(0xFF1E2024),
       iconColor: Color(0xFF34A853),
     ),
     const OnboardingItem(
       title: 'Memories & Spotlights',
-      subtitle: 'Automatic spotlights, stories, and collage creations designed to bring your precious moments alive.',
+      subtitle:
+          'Automatic spotlights, stories, and collage creations designed to bring your precious moments alive.',
       icon: Icons.auto_awesome_rounded,
       color: Color(0xFF1E2024),
       iconColor: Color(0xFFFBBC05),
@@ -58,6 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryButtonColor = isDark ? Colors.white : const Color(0xFF1F1F1F);
     final primaryButtonTextColor = isDark ? const Color(0xFF1F1F1F) : Colors.white;
+    final isCompactHeight = MediaQuery.sizeOf(context).height < 540;
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
@@ -80,133 +84,148 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _items.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final item = _items[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 130,
-                          height: 130,
-                          decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF1E2024) : const Color(0xFFF1F3F4),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isDark ? const Color(0xFF2C2E33) : const Color(0xFFE5E7EB),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              item.icon,
-                              size: 60,
-                              color: item.iconColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 44),
-                        Text(
-                          item.title,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w800,
-                            color: isDark ? Colors.white : const Color(0xFF1F1F1F),
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          item.subtitle,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: isDark ? Colors.white60 : const Color(0xFF666666),
-                            height: 1.45,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            // Indicator Dots & Action Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Dots
-                  Row(
-                    children: List.generate(
-                      _items.length,
-                      (index) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        margin: const EdgeInsets.only(right: 6),
-                        height: 8,
-                        width: _currentPage == index ? 24 : 8,
-                        decoration: BoxDecoration(
-                          color: _currentPage == index
-                              ? (isDark ? Colors.white : const Color(0xFF1F1F1F))
-                              : (isDark ? Colors.white24 : Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Next / Get Started Button (Themed Obsidian, No Blue)
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_currentPage < _items.length - 1) {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      } else {
-                        _navigateToAuth();
-                      }
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 540),
+            child: Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: _items.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryButtonColor,
-                      foregroundColor: primaryButtonTextColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      elevation: 1,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          _currentPage == _items.length - 1 ? 'Get Started' : 'Next',
-                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    itemBuilder: (context, index) {
+                      final item = _items[index];
+                      final double circleSize = isCompactHeight ? 88 : 130;
+                      return Center(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: circleSize,
+                                height: circleSize,
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF1E2024)
+                                      : const Color(0xFFF1F3F4),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: isDark
+                                        ? const Color(0xFF2C2E33)
+                                        : const Color(0xFFE5E7EB),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    item.icon,
+                                    size: isCompactHeight ? 42 : 60,
+                                    color: item.iconColor,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: isCompactHeight ? 20 : 44),
+                              Text(
+                                item.title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: isCompactHeight ? 22 : 26,
+                                  fontWeight: FontWeight.w800,
+                                  color: isDark ? Colors.white : const Color(0xFF1F1F1F),
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              SizedBox(height: isCompactHeight ? 10 : 16),
+                              Text(
+                                item.subtitle,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: isCompactHeight ? 14 : 15,
+                                  color: isDark ? Colors.white60 : const Color(0xFF666666),
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward_rounded, size: 18),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+
+                // Indicator Dots & Action Button
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: isCompactHeight ? 12 : 24,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Dots
+                      Row(
+                        children: List.generate(
+                          _items.length,
+                          (index) => AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            margin: const EdgeInsets.only(right: 6),
+                            height: 8,
+                            width: _currentPage == index ? 24 : 8,
+                            decoration: BoxDecoration(
+                              color: _currentPage == index
+                                  ? (isDark ? Colors.white : const Color(0xFF1F1F1F))
+                                  : (isDark ? Colors.white24 : Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Next / Get Started Button (Themed Obsidian, No Blue)
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_currentPage < _items.length - 1) {
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          } else {
+                            _navigateToAuth();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryButtonColor,
+                          foregroundColor: primaryButtonTextColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                          elevation: 1,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _currentPage == _items.length - 1 ? 'Get Started' : 'Next',
+                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.arrow_forward_rounded, size: 18),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

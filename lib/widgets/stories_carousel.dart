@@ -11,28 +11,41 @@ class StoriesCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
     if (stories.isEmpty) return const SizedBox.shrink();
 
+    final screenSize = MediaQuery.sizeOf(context);
+    final isCompactHeight = screenSize.height < 520;
+    final isWide = screenSize.width >= 600;
+    final isNarrow = screenSize.width < 360;
+
+    final double carouselHeight = isCompactHeight
+        ? 142
+        : (isWide ? 216 : (isNarrow ? 176 : 200));
+    final double cardWidth = isCompactHeight
+        ? 100
+        : (isWide ? 144 : (isNarrow ? 114 : 130));
+
     return SizedBox(
-      height: 200,
+      height: carouselHeight,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: isWide ? 6 : 14, vertical: 6),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: stories.length,
         separatorBuilder: (context, index) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
           final story = stories[index];
-          return _buildStoryCard(context, story);
+          return _buildStoryCard(context, story, cardWidth);
         },
       ),
     );
   }
 
-  Widget _buildStoryCard(BuildContext context, MemoryStory story) {
+  Widget _buildStoryCard(BuildContext context, MemoryStory story, double cardWidth) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => StoryViewerScreen(story: story),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                StoryViewerScreen(story: story),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);
             },
@@ -40,7 +53,7 @@ class StoriesCarousel extends StatelessWidget {
         );
       },
       child: Container(
-        width: 130,
+        width: cardWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
           boxShadow: [

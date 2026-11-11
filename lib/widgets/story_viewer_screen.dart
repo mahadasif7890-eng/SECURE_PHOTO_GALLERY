@@ -10,7 +10,8 @@ class StoryViewerScreen extends StatefulWidget {
   State<StoryViewerScreen> createState() => _StoryViewerScreenState();
 }
 
-class _StoryViewerScreenState extends State<StoryViewerScreen> with SingleTickerProviderStateMixin {
+class _StoryViewerScreenState extends State<StoryViewerScreen>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animController;
   int _currentIndex = 0;
@@ -210,11 +211,18 @@ class _StoryViewerScreenState extends State<StoryViewerScreen> with SingleTicker
                           height: 36,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(widget.story.coverUrl),
-                              fit: BoxFit.cover,
-                            ),
                             border: Border.all(color: Colors.white, width: 1.5),
+                          ),
+                          child: ClipOval(
+                            child: Image.network(
+                              widget.story.coverUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: widget.story.accentColor,
+                                child: const Icon(Icons.auto_awesome,
+                                    color: Colors.white, size: 18),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -272,12 +280,16 @@ class _StoryViewerScreenState extends State<StoryViewerScreen> with SingleTicker
                     children: [
                       const Icon(Icons.location_on_outlined, color: Colors.white70, size: 14),
                       const SizedBox(width: 4),
-                      Text(
-                        currentItem.location,
-                        style: const TextStyle(color: Colors.white70, fontSize: 13),
+                      Expanded(
+                        child: Text(
+                          currentItem.location,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.white70, fontSize: 13),
+                        ),
                       ),
-                      const Spacer(),
-                      if (currentItem.isVideo)
+                      if (currentItem.isVideo) ...[
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -295,6 +307,7 @@ class _StoryViewerScreenState extends State<StoryViewerScreen> with SingleTicker
                             ],
                           ),
                         ),
+                      ],
                     ],
                   ),
                 ],

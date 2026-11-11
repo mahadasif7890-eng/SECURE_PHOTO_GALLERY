@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/splash_screen.dart';
@@ -13,13 +14,28 @@ void main() {
   runApp(const SecurePhotoGalleryApp());
 }
 
+class _GalleryScrollBehavior extends MaterialScrollBehavior {
+  const _GalleryScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
+}
+
 class SecurePhotoGalleryApp extends StatelessWidget {
   const SecurePhotoGalleryApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Secure Photo Gallery',
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const _GalleryScrollBehavior(),
       themeMode: ThemeMode.system,
       theme: ThemeData(
         useMaterial3: true,

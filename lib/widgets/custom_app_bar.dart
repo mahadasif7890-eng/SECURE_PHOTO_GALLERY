@@ -22,12 +22,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isNarrow = screenWidth < 360;
 
     return SafeArea(
       bottom: false,
       child: Container(
         height: 60,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: isNarrow ? 12 : 16),
         child: Row(
           children: [
             // Google Photos Pinwheel Logo
@@ -42,29 +44,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               child: const GooglePhotosLogo(size: 32),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: isNarrow ? 8 : 14),
 
             // "Backup is off" status
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: onBackupTap ??
-                  () {
-                    _showBackupDialog(context);
-                  },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                child: Row(
-                  children: [
-                    Text(
-                      'Backup is off',
-                      style: TextStyle(
-                        fontSize: 16.5,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white70 : const Color(0xFF1F1F1F),
-                        letterSpacing: -0.2,
-                      ),
+            Flexible(
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onBackupTap ??
+                    () {
+                      _showBackupDialog(context);
+                    },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: Text(
+                    'Backup is off',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: isNarrow ? 15 : 16.5,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white70 : const Color(0xFF1F1F1F),
+                      letterSpacing: -0.2,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -233,7 +235,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _buildSheetItem(BuildContext context, IconData icon, String title, {bool hasBadge = false}) {
+  Widget _buildSheetItem(BuildContext context, IconData icon, String title,
+      {bool hasBadge = false}) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       leading: Stack(
@@ -271,70 +274,74 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   void _showBackupDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child:
+                          const Icon(Icons.cloud_upload_outlined, color: Colors.blue, size: 28),
                     ),
-                    child: const Icon(Icons.cloud_upload_outlined, color: Colors.blue, size: 28),
-                  ),
-                  const SizedBox(width: 16),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Cloud Backup',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Back up photos & videos securely to your account',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ],
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cloud Backup',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'Back up photos & videos securely to your account',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.shield_outlined, color: Colors.green),
-                title: const Text('Local Encrypted Storage Active'),
-                subtitle: const Text('All your media is stored safely on device'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A73E8),
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
+                  ],
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Backup settings updated')),
-                  );
-                },
-                child: const Text('Turn on backup'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.shield_outlined, color: Colors.green),
+                  title: Text('Local Encrypted Storage Active'),
+                  subtitle: Text('All your media is stored safely on device'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1A73E8),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Backup settings updated')),
+                    );
+                  },
+                  child: const Text('Turn on backup'),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -348,25 +355,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.notifications_none_rounded, size: 48, color: Colors.grey),
-              const SizedBox(height: 12),
-              const Text(
-                'No new sharing activity',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'When friends share photos or invite you to albums, they will appear here.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey, fontSize: 13),
-              ),
-              const SizedBox(height: 16),
-            ],
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.notifications_none_rounded, size: 48, color: Colors.grey),
+                SizedBox(height: 12),
+                Text(
+                  'No new sharing activity',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'When friends share photos or invite you to albums, they will appear here.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
           ),
         );
       },

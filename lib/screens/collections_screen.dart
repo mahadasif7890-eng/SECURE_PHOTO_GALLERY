@@ -17,171 +17,205 @@ class CollectionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
 
     return Scaffold(
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // Top Horizontal Quick Category Pills (Favorites, Trash, Camera, WhatsApp)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-              child: Column(
-                children: [
-                  Row(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          const double maxContentWidth = 960.0;
+          final double horizontalInset =
+              width > maxContentWidth ? (width - maxContentWidth) / 2 : 0.0;
+          final int gridColumns = width >= 900 ? 4 : (width >= 600 ? 3 : 2);
+          final int categoryColumns = width >= 760 ? 4 : 2;
+
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              // Top Horizontal Quick Category Pills (Favorites, Trash, Camera, WhatsApp)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalInset + 14,
+                    12,
+                    horizontalInset + 14,
+                    12,
+                  ),
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: _buildTopPill(
-                          context,
-                          icon: Icons.star_border_rounded,
-                          label: 'Favorites',
-                          onTap: () => _showSnackbar(context, 'Favorites'),
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildTopPill(
+                              context,
+                              icon: Icons.star_border_rounded,
+                              label: 'Favorites',
+                              onTap: () => _showSnackbar(context, 'Favorites'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _buildTopPill(
+                              context,
+                              icon: Icons.delete_outline_rounded,
+                              label: 'Trash',
+                              onTap: () => _showSnackbar(context, 'Trash'),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildTopPill(
-                          context,
-                          icon: Icons.delete_outline_rounded,
-                          label: 'Trash',
-                          onTap: () => _showSnackbar(context, 'Trash'),
-                        ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildTopPill(
+                              context,
+                              imageThumbnail:
+                                  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=150&q=80',
+                              label: 'Camera',
+                              onTap: () => _showSnackbar(context, 'Camera'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _buildTopPill(
+                              context,
+                              imageThumbnail:
+                                  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=150&q=80',
+                              label: 'WhatsApp Im...',
+                              onTap: () => _showSnackbar(context, 'WhatsApp Images'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildTopPill(
-                          context,
-                          imageThumbnail: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=150&q=80',
-                          label: 'Camera',
-                          onTap: () => _showSnackbar(context, 'Camera'),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildTopPill(
-                          context,
-                          imageThumbnail: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=150&q=80',
-                          label: 'WhatsApp Im...',
-                          onTap: () => _showSnackbar(context, 'WhatsApp Images'),
-                        ),
-                      ),
-                    ],
+                ),
+              ),
+
+              // Categorized Grid (People, Documents, Places, Camera)
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalInset + 14),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: categoryColumns,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 18,
+                    childAspectRatio: 0.88,
                   ),
-                ],
-              ),
-            ),
-          ),
+                  delegate: SliverChildListDelegate([
+                    // 1. People 4-in-1 collage
+                    _buildQuadCollageCard(
+                      context,
+                      title: 'People',
+                      images: [
+                        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=300&q=80',
+                      ],
+                      isCircularGrid: true,
+                    ),
 
-          // Categorized 2x2 Grid (People, Documents, Places, Camera)
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 18,
-                childAspectRatio: 0.88,
-              ),
-              delegate: SliverChildListDelegate([
-                // 1. People 4-in-1 collage
-                _buildQuadCollageCard(
-                  context,
-                  title: 'People',
-                  images: [
-                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=300&q=80',
-                  ],
-                  isCircularGrid: true,
-                ),
+                    // 2. Documents 4-in-1 collage
+                    _buildQuadCollageCard(
+                      context,
+                      title: 'Documents',
+                      images: [
+                        'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=300&q=80',
+                        'https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&w=300&q=80',
+                      ],
+                      isCircularGrid: false,
+                    ),
 
-                // 2. Documents 4-in-1 collage
-                _buildQuadCollageCard(
-                  context,
-                  title: 'Documents',
-                  images: [
-                    'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1589330694653-ded6df03f754?auto=format&fit=crop&w=300&q=80',
-                  ],
-                  isCircularGrid: false,
-                ),
+                    // 3. Places Map View with circular pin badge
+                    _buildPlacesMapCard(context),
 
-                // 3. Places Map View with circular pin badge
-                _buildPlacesMapCard(context),
-
-                // 4. Camera full image card
-                _buildCameraCard(context),
-              ]),
-            ),
-          ),
-
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 20, 16, 12),
-              child: Text(
-                'My Albums & Folders',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-
-          // All Albums Grid
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.82,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final album = collections[index];
-                  return _buildAlbumItem(context, album);
-                },
-                childCount: collections.length,
-              ),
-            ),
-          ),
-
-          // Utilities list section
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
-              child: Text(
-                'Utilities',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : const Color(0xFF1F1F1F),
+                    // 4. Camera full image card
+                    _buildCameraCard(context),
+                  ]),
                 ),
               ),
-            ),
-          ),
 
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildUtilityTile(context, Icons.archive_outlined, 'Archive', 'Hidden from timeline view'),
-                _buildUtilityTile(context, Icons.cleaning_services_outlined, 'Free up space', 'Remove backed-up photos'),
-                _buildUtilityTile(context, Icons.cloud_download_outlined, 'Import from other sources', 'Move photos from iCloud / SD'),
-              ]),
-            ),
-          ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalInset + 16,
+                    20,
+                    horizontalInset + 16,
+                    12,
+                  ),
+                  child: const Text(
+                    'My Albums & Folders',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
-        ],
+              // All Albums Grid
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalInset + 14),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gridColumns,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.82,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final album = collections[index];
+                      return _buildAlbumItem(context, album);
+                    },
+                    childCount: collections.length,
+                  ),
+                ),
+              ),
+
+              // Utilities list section
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    horizontalInset + 16,
+                    24,
+                    horizontalInset + 16,
+                    12,
+                  ),
+                  child: Text(
+                    'Utilities',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : const Color(0xFF1F1F1F),
+                    ),
+                  ),
+                ),
+              ),
+
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: horizontalInset + 14),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    _buildUtilityTile(
+                        context, Icons.archive_outlined, 'Archive', 'Hidden from timeline view'),
+                    _buildUtilityTile(context, Icons.cleaning_services_outlined, 'Free up space',
+                        'Remove backed-up photos'),
+                    _buildUtilityTile(context, Icons.cloud_download_outlined,
+                        'Import from other sources', 'Move photos from iCloud / SD'),
+                  ]),
+                ),
+              ),
+
+              SliverToBoxAdapter(
+                child: SizedBox(height: bottomInset + 96),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -211,14 +245,17 @@ class CollectionsScreen extends StatelessWidget {
             if (icon != null)
               Icon(icon, size: 22, color: isDark ? Colors.white : const Color(0xFF1F1F1F))
             else if (imageThumbnail != null)
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(imageThumbnail),
-                    fit: BoxFit.cover,
+              ClipOval(
+                child: Image.network(
+                  imageThumbnail,
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: 32,
+                    height: 32,
+                    color: Colors.grey.shade500,
+                    child: const Icon(Icons.photo, size: 16, color: Colors.white),
                   ),
                 ),
               ),
@@ -276,7 +313,8 @@ class CollectionsScreen extends StatelessWidget {
                           child: Image.network(
                             url,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey),
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(color: Colors.grey),
                           ),
                         ),
                       );
@@ -284,7 +322,8 @@ class CollectionsScreen extends StatelessWidget {
                     return Image.network(
                       url,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey),
+                      errorBuilder: (context, error, stackTrace) =>
+                          Container(color: Colors.grey),
                     );
                   }).toList(),
                 ),
@@ -294,6 +333,8 @@ class CollectionsScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
           ),
         ],
@@ -323,6 +364,10 @@ class CollectionsScreen extends StatelessWidget {
                     Image.network(
                       'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=400&q=80',
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: isDark ? const Color(0xFF2E3B30) : const Color(0xFFC8E6C9),
+                        child: const Icon(Icons.map_outlined, size: 42, color: Colors.green),
+                      ),
                     ),
                     Center(
                       child: Container(
@@ -343,6 +388,10 @@ class CollectionsScreen extends StatelessWidget {
                           child: Image.network(
                             'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=100&q=80',
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: Colors.grey.shade300,
+                              child: const Icon(Icons.place, size: 20, color: Colors.redAccent),
+                            ),
                           ),
                         ),
                       ),
@@ -355,6 +404,8 @@ class CollectionsScreen extends StatelessWidget {
           const SizedBox(height: 8),
           const Text(
             'Places',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
           ),
         ],
@@ -378,6 +429,10 @@ class CollectionsScreen extends StatelessWidget {
                 child: Image.network(
                   'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80',
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey.shade700,
+                    child: const Icon(Icons.camera_alt_outlined, color: Colors.white70, size: 36),
+                  ),
                 ),
               ),
             ),
@@ -385,6 +440,8 @@ class CollectionsScreen extends StatelessWidget {
           const SizedBox(height: 8),
           const Text(
             'Camera',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5),
           ),
           const Text(
@@ -437,7 +494,8 @@ class CollectionsScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey.shade800,
-                        child: Icon(album.icon ?? Icons.photo_album, color: Colors.white60, size: 36),
+                        child: Icon(album.icon ?? Icons.photo_album,
+                            color: Colors.white60, size: 36),
                       ),
                     ),
                     if (album.icon != null)
